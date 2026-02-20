@@ -31,4 +31,51 @@
  */
 export function fixBollywoodTitle(title) {
   // Your code here
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return ""
+  }
+
+  const wordsNotChanged = ["ka", "ki", "ke", "se", "aur", "ya", "the", "of", "in", "a", "an"]
+
+  const trimmedTitle = title.trim()
+
+  const splitTitle = trimmedTitle.split(" ")
+
+
+
+  const correctTitle = splitTitle.filter((word) => word !== "")
+    .map((word, index) => {
+
+      const wordToLower = word.toLowerCase()
+
+      if (wordsNotChanged.includes(word) && index === 0) {
+        return wordToLower.charAt(0).toUpperCase() + wordToLower.slice(1)
+      } else if (!wordsNotChanged.includes(word)) {
+        return wordToLower.charAt(0).toUpperCase() + wordToLower.slice(1)
+      } else {
+        return wordToLower
+      }
+
+    })
+    .join(" ")
+
+  // console.log(correctTitle);
+
+  /**
+   * if (!wordsNotChanged.includes(word)) {
+        let newWord = ""
+        const firstLetter = word.slice(0, 1).toUpperCase()
+        const remainingLetters = word.slice(1, word.length).toLowerCase()
+        newWord += firstLetter + remainingLetters
+        return newWord
+      } else {
+        return word
+      }
+   */
+
+  return correctTitle
+
+
+
 }
