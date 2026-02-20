@@ -43,4 +43,25 @@
  */
 export function generateLocalPass(passenger) {
   // Your code here
+
+  if (typeof passenger !== "object" || Array.isArray(passenger) || passenger === null) {
+    return "INVALID PASS"
+  }
+
+  const { name, from, to, classType } = passenger
+
+  const usedClassType = classType.toLowerCase()
+  const allowedClassType = ["first", "second"]
+  if (!name || !from || !to || !classType || !allowedClassType.includes(usedClassType)) {
+    return "INVALID PASS"
+  }
+
+  const passId = (usedClassType.charAt(0) + from.slice(0, 3) + to.slice(0, 3)).toUpperCase()
+
+
+  const localPass = `MUMBAI LOCAL PASS\n---\nName: ${name.toUpperCase()}\nFrom: ${from.charAt(0).toUpperCase() + from.slice(1).toLowerCase()}\nTo: ${to.charAt(0).toUpperCase() + to.slice(1).toLowerCase()}\nClass: ${classType.toUpperCase()}\nPass ID: ${passId}`
+
+  console.log(localPass);
+  return localPass
+
 }
