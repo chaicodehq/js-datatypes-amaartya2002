@@ -42,4 +42,90 @@
  */
 export function generateReportCard(student) {
   // Your code here
+
+  if (typeof student !== "object" || student === null) {
+    return null
+  }
+
+  const { name, marks } = student
+
+  if (typeof name != "string" || name === "" || typeof marks !== "object" || Object.keys(marks).length === 0) {
+    return null
+  }
+
+  const areMarksValid = Object.values(marks).every((mark) => typeof mark === "number" && (mark >= 0 && mark <= 100))
+
+  if (!areMarksValid) return null
+
+  const totalMarks = Object.values(marks).reduce((acc, curr) => {
+    return acc + Number(curr)
+  }, 0)
+
+  const noOfSubjects = Object.keys(marks).length
+
+  const percentage = parseFloat(((totalMarks / (noOfSubjects * 100)) * 100).toFixed(2))
+
+  let grade
+
+  if (percentage >= 90) {
+    grade = "A+"
+  } else if (percentage >= 80) {
+    grade = "A"
+  } else if (percentage >= 70) {
+    grade = "B"
+  } else if (percentage >= 60) {
+    grade = "C"
+  } else if (percentage >= 40) {
+    grade = "D"
+  } else {
+    grade = "F"
+  }
+
+  /***
+   * const highestMarks = Object.entries(marks)
+    .reduce((a, b) => {
+      const intVal = Number(b[1])
+      return Math.max(a, intVal)
+    }, -Infinity)
+
+  const highestSubject = Object.entries(marks).find((sub) => Number(sub[1]) === highestMarks)[0]
+   * 
+   */
+
+
+  const subAndMarks = Object.entries(marks)
+
+  let marksArr = subAndMarks[0]
+
+  const highestSubject = subAndMarks.reduce((marksArr, curr) => {
+
+    return marksArr[1] > curr[1] ? marksArr : curr
+  }, marksArr)[0]
+
+
+  const lowestSubject = subAndMarks.reduce((marksArr, curr) => {
+    return marksArr[1] < curr[1] ? marksArr : curr
+  }, marksArr)[0]
+
+
+  const passedSubjects = subAndMarks.filter((sub) => sub[1] >= 40)
+    .map((sub) => sub[0])
+
+  const failedSubjects = subAndMarks.filter((sub) => sub[1] < 40)
+    .map((sub) => sub[0])
+
+
+  return {
+    name,
+    totalMarks,
+    percentage,
+    grade,
+    highestSubject,
+    lowestSubject,
+    passedSubjects,
+    failedSubjects,
+    subjectCount: noOfSubjects
+  }
+
+
 }
