@@ -47,4 +47,77 @@
  */
 export function buildZomatoOrder(cart, coupon) {
   // Your code here
+  if (!Array.isArray(cart) || cart.length === 0) {
+    return null
+  }
+  //console.log(cart);
+
+
+  const items = cart.filter((item) => item.qty > 0)
+    .reduce((acc, curr) => {
+
+      const addonTotal = curr["addons"]?.reduce((initial, current) => {
+        const addOnPrice = parseInt(current.split(":")[1])
+        return initial + addOnPrice
+      }, 0) || 0
+
+      const name = curr["name"]
+      const qty = curr["qty"]
+      const basePrice = curr["price"]
+
+      const itemTotal = (addonTotal + curr["price"]) * curr["qty"]
+      acc.push({ name, qty, basePrice, addonTotal, itemTotal })
+      return acc
+    }, [])
+
+  // console.log(items);
+
+
+  const subTotal = items.reduce((acc, curr) => {
+    return acc + curr["itemTotal"]
+  }, 0)
+
+  //console.log(subTotal);
+  let deliveryFee;
+
+  if (subTotal < 500) {
+    deliveryFee = 30
+  } else if (subTotal >= 500 && subTotal <= 999) {
+    deliveryFee = 15
+  } else {
+    deliveryFee = 0
+  }
+
+  const gst = parseFloat(((5 * subTotal) / 100).toFixed(2))
+
+  const couponHandeler = {
+    "FIRST50": () => Math.min(150, (subTotal / 2)),
+    "FLAT100": () => 100,
+    "FREESHIP": () => {
+      const givenDiscount = deliveryFee
+      deliveryFee = 0
+      return givenDiscount
+    }
+  }
+
+  const myCoupon = coupon?.toUpperCase()
+
+  const discount = couponHandeler[myCoupon]?.() || 0
+
+  const grandTotal = parseFloat((Math.max(0, (subTotal + deliveryFee + gst - discount))).toFixed(2))
+
+
+
+  return {
+    items,
+    subtotal: subTotal,
+    deliveryFee,
+    gst,
+    discount,
+    grandTotal
+  }
+
+
+
 }
+
