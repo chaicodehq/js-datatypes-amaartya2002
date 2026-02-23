@@ -70,6 +70,8 @@
  *   //      trainInfo: "Train: 12301 - Rajdhani Express | NDLS → HWH | Class: 3A",
  *   //      passengers: [...], summary: { ..., allConfirmed: true }, chartPrepared: true }
  */
+
+// everything was done from earlier
 export function processRailwayPNR(pnrData) {
   if (!pnrData || typeof pnrData !== 'object') return null;
   if (typeof pnrData.pnr !== 'string') return null;
