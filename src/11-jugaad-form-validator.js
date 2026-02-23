@@ -63,4 +63,126 @@
  */
 export function validateForm(formData) {
   // Your code here
+
+  if (typeof formData !== "object" || formData === null) {
+    return null
+  }
+
+  const { name, email, phone, age, pincode, state, agreeTerms } = formData
+
+  const errors = {}
+  const isNameValid = function validateName(name) {
+
+    if (typeof name === "string") {
+      const updatedName = name.trim()
+
+      if (updatedName.length >= 2 && updatedName.length <= 50 && updatedName.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+
+  }
+
+  if (!isNameValid(name)) {
+    errors.name = "Name must be 2-50 characters"
+  }
+
+  const isEmailValid = function (email) {
+    if (typeof email === "string") {
+
+      if ((email.indexOf("@") >= 0 && email.indexOf("@") === email.lastIndexOf("@")) && (email.includes(".")) && (email.indexOf("@") < email.indexOf("."))) {
+        return true
+      } else {
+        return false
+      }
+
+    } else {
+      return false
+    }
+  }
+
+  if (!isEmailValid(email)) {
+    errors.email = "Invalid email format"
+  }
+
+  const isPhoneValid = function (phone) {
+
+
+    if (typeof phone === "string") {
+
+      if (phone.length === 10) {
+
+        const digitCheck = /^[6-9][0-9]{9}$/.test(phone)
+
+        return digitCheck ? true : false
+
+      } else {
+        return false
+      }
+
+    } else {
+      return false
+    }
+  }
+
+  if (!isPhoneValid(phone)) {
+    errors.phone = "Invalid Indian phone number"
+  }
+
+  const isAgeValid = function (age) {
+
+    const ageNum = typeof age === "string" ? Number(age) : age
+
+    return (
+      typeof ageNum === "number" &&
+      Number.isInteger(ageNum) &&
+      (ageNum >= 16 && ageNum <= 100)
+    )
+
+  }
+
+  if (!isAgeValid(age)) {
+    errors.age = "Age must be an integer between 16 and 100"
+  }
+
+  const isValidPinCode = function (pincode) {
+
+    return (typeof pincode === "string" && /^[1-9][0-9]{5}$/.test(pincode))
+  }
+
+  if (!isValidPinCode(pincode)) {
+    errors.pincode = "Invalid Indian pincode"
+  }
+
+  const isStateValid = function (state) {
+
+    const stateValid = state ?? ""
+
+    return typeof stateValid === "string" && stateValid.trim().length > 0
+  }
+
+  if (!isStateValid(state)) {
+    errors.state = "State is required"
+  }
+
+  const doesAgreeToTerms = function (agreeTerms) {
+    return Boolean(agreeTerms)
+  }
+
+  if (!doesAgreeToTerms(agreeTerms)) {
+    errors.agreeTerms = "Must agree to terms"
+  }
+
+  const isValid = Object.keys(errors).length ? false : true
+
+
+  return {
+    isValid,
+    errors
+  }
+
 }
